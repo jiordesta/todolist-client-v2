@@ -14,5 +14,5 @@ export const store = configureStore({
     drawer: drawerSlice,
     demo: demoSlice,
   },
-  devTools: process.env.NODE_ENV === "development",
+  devTools: false,
 });
