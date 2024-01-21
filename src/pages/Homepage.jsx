@@ -17,7 +17,8 @@ import AboutCanvas from "../components/AboutCanvas";
 export default function Homepage() {
   const dispatch = useDispatch();
   const todos = useSelector((state) => state.todo.todos);
-
+  const start = useSelector((state) => state.demo.start);
+  const index = useSelector((state) => state.demo.index);
   const loading_todos = useSelector((state) => state.todo.loading_todos);
   const loading_delete_done = useSelector(
     (state) => state.todo.loading_delete_done
@@ -170,9 +171,124 @@ export default function Homepage() {
     );
   };
 
+  const TodoDemoCard = () => {
+    const [title, setTitle] = useState("Sample Title");
+    const [description, setDescription] = useState("Sampe Description");
+    const [status, setStatus] = useState("0");
+
+    const [modStatus, setModStatus] = useState(status);
+    const [deleting, setDeleting] = useState(false);
+    const [updating, setUpdating] = useState(false);
+    const [setting, setSetting] = useState(false);
+    const statusId = () => {
+      if (modStatus == "0") {
+        return "info";
+      } else if (modStatus == "1") {
+        return "success";
+      }
+      return "danger";
+    };
+
+    return (
+      <div className="col-md-6" id="todo-sample">
+        <div className="card mb-1">
+          <div className="badge"></div>
+          <div className="card-body m-0 p-1">
+            <div className="d-flex">
+              <h4
+                className="p-2 m-0"
+                style={{
+                  whiteSpace: "nowrap",
+                  textOverflow: "ellipsis",
+                  overflow: "hidden",
+                  maxWidth: "80%",
+                }}
+              >
+                {title}
+              </h4>
+              <div className="">
+                <span
+                  className={`position-absolute top-0 end-0 text-${statusId()} p-1`}
+                >
+                  {modStatus == "0" ? (
+                    <>NEW</>
+                  ) : modStatus == "1" ? (
+                    <>WORKING</>
+                  ) : (
+                    <>DONE</>
+                  )}
+                </span>
+              </div>
+            </div>
+
+            <p
+              className="mb-0 card p-2 custom-scrollbar"
+              style={{ height: "120px", overflowY: "auto" }}
+            >
+              {description}
+            </p>
+            <div className="d-flex pt-1">
+              <div className="set w-100">
+                {modStatus != "2" ? (
+                  <button
+                    id="set-demo"
+                    disabled={setting}
+                    className="btn btn-outline-success w-100"
+                    onClick={() => {
+                      let s = modStatus;
+                      if (s == "0") {
+                        s = "1";
+                      } else if (s == "1") {
+                        s = "2";
+                      }
+                      setSetting(true);
+                      setModStatus(s);
+                      setStatus(s);
+                      setSetting(false);
+                    }}
+                  >
+                    {setting ? (
+                      <>Updating..</>
+                    ) : (
+                      <>
+                        {modStatus == "0" ? (
+                          <i className="fa-solid fa-person-digging"></i>
+                        ) : (
+                          <i className="fa-solid fa-check"></i>
+                        )}
+                      </>
+                    )}
+                  </button>
+                ) : null}
+              </div>
+              <div className="update w-100 mx-1">
+                <button
+                  id="update-demo"
+                  type="button"
+                  className="btn btn-outline-warning w-100"
+                >
+                  <i className="fa-regular fa-pen-to-square"></i>
+                </button>
+              </div>
+              <div className="delete w-100">
+                <button
+                  id="delete-demo"
+                  disabled={deleting}
+                  className="btn btn-outline-danger w-100"
+                >
+                  <i className="fa-solid fa-eraser"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="container-fluid">
-      <DemoCard position={{ left: position.left, top: position.top }} />
+      {start ? <DemoCard /> : null}
       <AboutCanvas />
       <div className="row d-flex justify-content-end">
         <div className="col-md-6">
@@ -233,7 +349,7 @@ export default function Homepage() {
           </div>
         </div>
       </div>
-      <div className="row g-2">
+      <div className="row g-2" id="todos-container">
         {loading_todos ? (
           <>
             {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((i) => (
@@ -248,9 +364,15 @@ export default function Homepage() {
           </>
         ) : (
           <>
-            {todos.map((todo) => (
-              <TodoCard key={todo._id} todo={todo} />
-            ))}
+            {start ? (
+              <>{index >= 2 ? <TodoDemoCard /> : null}</>
+            ) : (
+              <>
+                {todos.map((todo) => (
+                  <TodoCard key={todo._id} todo={todo} />
+                ))}
+              </>
+            )}
           </>
         )}
       </div>

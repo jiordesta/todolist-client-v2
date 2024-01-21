@@ -3,11 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { get_current_user, logout } from "../redux/reducers/Authentication";
 import { error, success } from "../redux/reducers/Notification";
 import { setAboutDrawer } from "../redux/reducers/Drawer";
+import { reset, setStart } from "../redux/reducers/Demo";
 
 export default function Navigation() {
   const user = useSelector((state) => state.auth.user);
   const loading_logout = useSelector((state) => state.auth.loading_logout);
-
+  const start = useSelector((state) => state.demo.start);
   const some_drawers_is_open = useSelector((state) => state.drawer.about_open);
 
   const dispatch = useDispatch();
@@ -36,7 +37,11 @@ export default function Navigation() {
             <ul className="navbar-nav w-75 d-flex justify-content-center"></ul>
             <ul className="navbar-nav w-25 d-flex justify-content-end">
               <li className="nav-item nav-hover w-100">
-                <span>Demo</span>
+                {start ? (
+                  <span onClick={() => dispatch(reset())}>End</span>
+                ) : (
+                  <span onClick={() => dispatch(setStart(true))}>Tour</span>
+                )}
               </li>
               <li className="nav-item nav-hover w-100">
                 <span onClick={() => dispatch(setAboutDrawer(true))}>
@@ -44,7 +49,11 @@ export default function Navigation() {
                 </span>
               </li>
               <li className="nav-item nav-hover w-100">
-                <span>Profile</span>
+                <span
+                  onClick={() => alert(`Hello ${user.fname} ${user.lname}`)}
+                >
+                  Profile
+                </span>
               </li>
               <li className="nav-item nav-hover w-100">
                 <span
