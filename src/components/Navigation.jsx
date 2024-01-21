@@ -17,7 +17,7 @@ export default function Navigation() {
       <nav className="navbar navbar-expand-lg bg-body-tertiary p-3 sticky-top">
         <div className="container-fluid p-0">
           <div className="w-25 ">
-            <span>TODOLIST</span>
+            <img src="/icon.svg" alt="" style={{ width: "40px" }} />
           </div>
           <button
             className="navbar-toggler"
