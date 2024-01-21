@@ -14,5 +14,5 @@ export const store = configureStore({
     drawer: drawerSlice,
     demo: demoSlice,
   },
-  devTools: false,
+  devTools: true,
 });
